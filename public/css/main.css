@@ -1,0 +1,10 @@
+
+.control {
+	width: 400px;
+}
+.button {
+	display: inline-block;
+	width: 49%;
+	height: 50px;
+	background: brown;
+}
