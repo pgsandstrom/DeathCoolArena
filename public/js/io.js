@@ -16,9 +16,15 @@
 			console.log("received start message!");
 		});
 
+		socket.on('identity', function (identity) {
+			console.log("identity: " + identity);
+			ploxfight.identity = identity;
+		});
+
 		socket.on('update', function (msg) {
 			var object = $.parseJSON(msg);
 			console.log("the data is: ", JSON.stringify(object, null, 2));
+			ploxfight.animate(object)
 
 		});
 

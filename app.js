@@ -19,6 +19,7 @@ io.on('connection', function (socket) {
 
 	console.log("connection: " + playerId);
 	gameInstance.addPlayer(io, playerId);
+	socket.emit("identity", playerId);
 
 	socket.on('move', function (move) {
 		console.log("move: " + JSON.stringify(move, null, 2));

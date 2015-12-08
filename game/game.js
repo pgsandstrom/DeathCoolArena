@@ -141,7 +141,9 @@ var Attack = ploxfight.Attack;
 Attack.prototype.toJson = function () {
 	var attackJson = {};
 	attackJson.load = this.load;
+	attackJson.loadTotal = this.loadTotal;
 	attackJson.refresh = this.refresh;
+	attackJson.refreshTotal = this.refreshTotal;
 	attackJson.description = this.description;
 	return attackJson;
 };
