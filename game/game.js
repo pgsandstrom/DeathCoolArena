@@ -131,7 +131,7 @@ ploxfight.Attack = function Attack(player) {
 	this.player = player;
 	this.loadTotal = 1000;
 	this.load = 0;
-	this.refreshTotal = 5000;
+	this.refreshTotal = 2000;
 	this.refresh = 0;
 	this.description = "attack yo";
 };
