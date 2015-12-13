@@ -3,14 +3,18 @@ var newGame = function (gameHolder) {
 };
 
 var Game = function Game(gameHolder) {
+	this.time = Date.now();
 	this.gameHolder = gameHolder;
 	this.players = [];
 };
 
 Game.prototype.updateMove = function (playerId, move) {
 
+	this.calculateNewState();
+
 	var player = this.getPlayer(playerId);
-	player.attacks[0].load = player.attacks[0].loadTotal;
+	var attack = player.attacks[move];
+	attack.load = attack.loadTotal;
 
 	this.resolveNextUpdate();
 	this.sendGame();
@@ -33,7 +37,6 @@ Game.prototype.resolveNextUpdate = function () {
 
 	if (time === 9999999) {
 		console.log("nothing to wait for...");
-		return;
 	} else {
 		this.time = Date.now();
 		var self = this;
@@ -42,6 +45,8 @@ Game.prototype.resolveNextUpdate = function () {
 			//TODO: Blir  det något problem av att vi låter såna här waits ligga kvar, så många kan vara igång samtidigt?
 			//TODO: Om inte annat så blir det fler å fler... så vi borde ha en flagga för att någon redan är igång eller nått...
 			self.calculateNewState();
+			self.sendGame();
+			self.resolveNextUpdate();
 		}, time);
 	}
 };
@@ -67,9 +72,6 @@ Game.prototype.calculateNewState = function () {
 			}
 		});
 	});
-
-	this.sendGame();
-	this.resolveNextUpdate();
 };
 
 Game.prototype.sendGame = function () {
@@ -113,7 +115,9 @@ ploxfight.Player = function Player(game, id) {
 	this.health = 100;
 	this.mana = 100;
 	this.attacks = [];
-	this.attacks.push(new Attack(this));
+	for (var i = 0; i < 2; i++) {
+		this.attacks.push(new Attack(this));
+	}
 };
 
 var Player = ploxfight.Player;

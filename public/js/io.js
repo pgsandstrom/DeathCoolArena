@@ -29,10 +29,10 @@
 		});
 
 		ploxfight.sendMove = function (name) {
-			var move = {
-				move: name
-			};
-			socket.emit('move', move);
+			//var move = {
+			//	move: name
+			//};
+			socket.emit('move', name);
 		};
 
 	};

@@ -18,8 +18,6 @@
 		}
 
 		player.attacks.forEach(function (attack, index) {
-			var player =$("#player");
-			var lol = $("#player").eq(index);
 			animateButton(attack, $("#player").children().eq(index).children(".progressbar"));
 		});
 
@@ -29,9 +27,18 @@
 	};
 
 	var animateButton = function (attack, button) {
+
+		if (button.length !== 1) {
+			console.log("wrong button selection: " + button.length);
+		}
+
 		if (attack.load > 0) {
-			var quota = ((attack.loadTotal / attack.load) * 100) | 0;
+			var quota = ((attack.load / attack.loadTotal) * 100) | 0;
 			console.log("load quota: " + quota);
+			if(quota > 100) {
+				console.log("attack.loadTotal: " + attack.loadTotal);
+				console.log("attack.load: " + attack.load);
+			}
 			button.css({width: quota + "%", background: "blue"});
 			button
 				.animate({
@@ -41,7 +48,7 @@
 					duration: attack.load
 				});
 		} else if (attack.refresh > 0) {
-			var quota = ((attack.refreshTotal / attack.refresh) * 100) | 0;
+			var quota = ((attack.refresh / attack.refreshTotal) * 100) | 0;
 			console.log("refresh quota: " + quota);
 			button.css({width: quota + "%", background: "red"});
 			button
@@ -57,30 +64,5 @@
 		} else {
 			button.css({width: "100%", background: "brown"});
 		}
-	};
-
-	var gameExample = {
-		"players": [
-			{
-				"id": "rD7grrvIlPyyQksaAAAA",
-				"health": 100,
-				"mana": 100,
-				"attack": {
-					"load": 0,
-					"refresh": 0,
-					"description": "attack yo"
-				}
-			},
-			{
-				"id": "sytoF09aWHW2XQa7AAAB",
-				"health": 100,
-				"mana": 100,
-				"attack": {
-					"load": 0,
-					"refresh": 0,
-					"description": "attack yo"
-				}
-			}
-		]
 	};
 })();
