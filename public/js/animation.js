@@ -35,17 +35,14 @@
 		if (attack.load > 0) {
 			var quota = ((attack.load / attack.loadTotal) * 100) | 0;
 			console.log("load quota: " + quota);
-			if(quota > 100) {
-				console.log("attack.loadTotal: " + attack.loadTotal);
-				console.log("attack.load: " + attack.load);
-			}
 			button.css({width: quota + "%", background: "blue"});
 			button
 				.animate({
 					width: "0%"
 				}, {
 					queue: false,
-					duration: attack.load
+					duration: attack.load,
+					easing: 'linear'
 				});
 		} else if (attack.refresh > 0) {
 			var quota = ((attack.refresh / attack.refreshTotal) * 100) | 0;
@@ -57,6 +54,7 @@
 				}, {
 					queue: false,
 					duration: attack.refresh,
+					easing: 'linear',
 					complete: function () {
 						button.css({width: "100%", background: "brown"});
 					}
