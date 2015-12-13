@@ -17,15 +17,21 @@
 			opponent = game.players[0];
 		}
 
-		animateButton(player.attack, $("#1").children(".progressbar"));
+		player.attacks.forEach(function (attack, index) {
+			var player =$("#player");
+			var lol = $("#player").eq(index);
+			animateButton(attack, $("#player").children().eq(index).children(".progressbar"));
+		});
 
-
+		opponent.attacks.forEach(function (attack, index) {
+			animateButton(attack, $("#opponent").children().eq(index).children(".progressbar"));
+		});
 	};
 
 	var animateButton = function (attack, button) {
 		if (attack.load > 0) {
 			var quota = ((attack.loadTotal / attack.load) * 100) | 0;
-			console.log("load quota: "+quota);
+			console.log("load quota: " + quota);
 			button.css({width: quota + "%", background: "blue"});
 			button
 				.animate({
@@ -36,7 +42,7 @@
 				});
 		} else if (attack.refresh > 0) {
 			var quota = ((attack.refreshTotal / attack.refresh) * 100) | 0;
-			console.log("refresh quota: "+quota);
+			console.log("refresh quota: " + quota);
 			button.css({width: quota + "%", background: "red"});
 			button
 				.animate({
@@ -44,7 +50,7 @@
 				}, {
 					queue: false,
 					duration: attack.refresh,
-					complete: function() {
+					complete: function () {
 						button.css({width: "100%", background: "brown"});
 					}
 				});

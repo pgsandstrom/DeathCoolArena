@@ -123,7 +123,9 @@ Player.prototype.toJson = function () {
 	playerJson.id = this.id;
 	playerJson.health = this.health;
 	playerJson.mana = this.mana;
-	playerJson.attack = this.attacks[0].toJson();
+	playerJson.attacks = this.attacks.map(function (attack) {
+		return attack.toJson();
+	});
 	return playerJson;
 };
 
