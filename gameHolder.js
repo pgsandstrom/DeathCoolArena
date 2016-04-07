@@ -7,32 +7,37 @@ var PlayerHolder = function PlayerHolder(id, number) {
 
 var GameHolder = function GameHolder(io) {
 	this.io = io;
-	this.players = [];
+	this.playerHolders = [];
 	this.playerCount = 0;
 	this.game = gameCreator.create(this);
+	this.running = false;
 };
 
 GameHolder.prototype.addPlayer = function (playerId) {
-	this.players.push(new PlayerHolder(playerId, this.playerCount));
+	this.playerHolders.push(new PlayerHolder(playerId, this.playerCount));
 	this.game.addPlayer(playerId);
 	this.playerCount++;
+	if (this.playerCount > 1) {
+		this.running = true;
+	}
 };
 
 GameHolder.prototype.removePlayer = function (playerId) {
 	this.playerCount--;
-	for (var i = 0; i < this.players.length; i++) {
-		var dudeId = this.players[i].id;
+	for (var i = 0; i < this.playerHolders.length; i++) {
+		var dudeId = this.playerHolders[i].id;
 		if (dudeId === playerId) {
-			this.players.splice(i, 1);
+			this.playerHolders.splice(i, 1);
 			break;
 		}
 	}
-	//this.game.removePlayer(playerId);
+	this.running = false;
 };
 
 GameHolder.prototype.startGame = function () {
-	this.game.start();
+	this.running = true;
 	this.io.emit("start");
+	this.game.sendGame();
 	console.log("Starting!");
 };
 
@@ -40,12 +45,12 @@ GameHolder.prototype.restartGame = function () {
 	console.log("Restarting game!");
 	this.game.stop();
 	this.game = gameCreator.create(this);
-	var oldPlayers = this.players;
-	this.players = [];
+	var oldPlayerHolders = this.playerHolders;
+	this.playerHolders = [];
 	this.playerCount = 0;
 	var thisGameHolder = this;
-	oldPlayers.forEach(function (player) {
-		thisGameHolder.addPlayer(player.id, player.number);
+	oldPlayerHolders.forEach(function (playerHolder) {
+		thisGameHolder.addPlayer(playerHolder.id, playerHolder.number);
 	});
 	this.game.start();
 };
@@ -55,7 +60,9 @@ GameHolder.prototype.stopGame = function () {
 };
 
 GameHolder.prototype.updateMoves = function (playerId, move) {
-	this.game.updateMove(playerId, move);
+	if (this.running) {
+		this.game.updateMove(playerId, move);
+	}
 };
 
 GameHolder.prototype.sendGame = function (game) {
@@ -67,6 +74,7 @@ GameHolder.prototype.sendGame = function (game) {
 var gameHolder;
 
 var addPlayer = function (io, playerId) {
+	console.log("add Player: "+playerId);
 	if (gameHolder === undefined) {
 		gameHolder = new GameHolder(io);
 		gameHolder.addPlayer(playerId);
@@ -77,10 +85,17 @@ var addPlayer = function (io, playerId) {
 };
 
 var removePlayer = function (playerId) {
+	console.log("add removePlayer: "+playerId);
 	gameHolder.removePlayer(playerId);
-	console.log("stopping game");
-	gameHolder.stopGame();
-	gameHolder = undefined;
+	if (gameHolder.running === false) {
+		// TODO: Lite fult
+		var io = gameHolder.io;
+		var playerHolders = gameHolder.playerHolders;
+		gameHolder = undefined;
+		playerHolders.forEach(function (playerHolder) {
+			addPlayer(io, playerHolder.id);
+		});
+	}
 };
 
 var updateMoves = function (playerId, moves) {

@@ -110,14 +110,6 @@ Game.prototype.getOpponent = function (player) {
 	}
 };
 
-Game.prototype.start = function () {
-	this.running = true;
-};
-
-Game.prototype.stop = function () {
-	this.running = false;
-};
-
 ploxfight.Player = function Player(game, id) {
 	this.game = game;
 	this.id = id;
