@@ -24,7 +24,7 @@
 		socket.on('update', function (msg) {
 			var object = $.parseJSON(msg);
 			console.log("the data is: ", JSON.stringify(object, null, 2));
-			ploxfight.animate(object)
+			ploxfight.animate(object);
 
 		});
 

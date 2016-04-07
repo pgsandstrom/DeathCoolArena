@@ -60,7 +60,7 @@ Game.prototype.calculateNewState = function () {
 			if (attack.load !== 0) {
 				attack.load = attack.load - timeDiff;
 				if (attack.load < 5) {
-					//TODO utför attacken!
+					attack.trigger();
 					attack.load = 0;
 					attack.refresh = attack.refreshTotal;
 				}
@@ -100,6 +100,15 @@ Game.prototype.getPlayer = function (playerId) {
 		}
 	}
 };
+Game.prototype.getOpponent = function (player) {
+	var playerId = player.id;
+	for (var i = 0; i < this.players.length; i++) {
+		var dude = this.players[i];
+		if (dude.id !== playerId) {
+			return dude;
+		}
+	}
+};
 
 Game.prototype.start = function () {
 	this.running = true;
@@ -115,12 +124,19 @@ ploxfight.Player = function Player(game, id) {
 	this.health = 100;
 	this.mana = 100;
 	this.attacks = [];
-	for (var i = 0; i < 2; i++) {
-		this.attacks.push(new Attack(this));
+	for (var i = 0; i < 6; i++) {
+		this.attacks.push(new Attack(this, "damage spell", function (player, opponent) {
+			opponent.health = opponent.health - 10;
+		}));
 	}
+	// this.attacks.push(new Attack(this));
 };
 
 var Player = ploxfight.Player;
+
+Player.prototype.getOpponent = function () {
+	return this.game.getOpponent(this);
+};
 
 Player.prototype.toJson = function () {
 	var playerJson = {};
@@ -133,16 +149,26 @@ Player.prototype.toJson = function () {
 	return playerJson;
 };
 
-ploxfight.Attack = function Attack(player) {
+ploxfight.Attack = function Attack(player, description, effect) {
 	this.player = player;
 	this.loadTotal = 1000;
 	this.load = 0;
 	this.refreshTotal = 2000;
 	this.refresh = 0;
-	this.description = "attack yo";
+	this.description = description;
+	this.effect = effect;
 };
 
 var Attack = ploxfight.Attack;
+
+Attack.prototype.trigger = function () {
+	var opponent= this.getOpponent();
+	this.effect(this.player, opponent);
+};
+
+Attack.prototype.getOpponent = function () {
+	return this.player.getOpponent();
+};
 
 Attack.prototype.toJson = function () {
 	var attackJson = {};
