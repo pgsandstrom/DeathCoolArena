@@ -3,7 +3,7 @@
 	var ploxfight = window.ploxfight = window.ploxfight || {};
 
 
-	ploxfight.animate = function (game) {
+	ploxfight.draw = function (game) {
 
 		var identity = ploxfight.identity;
 
@@ -19,21 +19,21 @@
 
 		drawPlayerData(player, $("#player"));
 		player.attacks.forEach(function (attack, index) {
-			animateButton(attack, $("#player").children().eq(index).children(".progressbar"));
+			drawButton(attack, $("#player").children().eq(index).children(".progressbar"));
 		});
 
 		drawPlayerData(opponent, $("#opponent"));
 		opponent.attacks.forEach(function (attack, index) {
-			animateButton(attack, $("#opponent").children().eq(index).children(".progressbar"));
+			drawButton(attack, $("#opponent").children().eq(index).children(".progressbar"));
 		});
 	};
 
-	var drawPlayerData = function(player, $htmlArea) {
-		$htmlArea.find('.health').text("health: "+player.health);
-		$htmlArea.find('.mana').text("health: "+player.mana);
+	var drawPlayerData = function (player, $htmlArea) {
+		$htmlArea.find('.health').text("health: " + player.health);
+		$htmlArea.find('.mana').text("health: " + player.mana);
 	};
 
-	var animateButton = function (attack, button) {
+	var drawButton = function (attack, button) {
 
 		if (button.length !== 1) {
 			console.log("wrong button selection: " + button.length);

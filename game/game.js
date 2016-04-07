@@ -129,7 +129,6 @@ ploxfight.Player = function Player(game, id) {
 			opponent.health = opponent.health - 10;
 		}));
 	}
-	// this.attacks.push(new Attack(this));
 };
 
 var Player = ploxfight.Player;
