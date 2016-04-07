@@ -22,7 +22,7 @@ io.on('connection', function (socket) {
 	socket.emit("identity", playerId);
 
 	socket.on('move', function (move) {
-		console.log("move: " + JSON.stringify(move, null, 2));
+		// console.log("move: " + JSON.stringify(move, null, 2));
 		gameInstance.updateMoves(playerId, move);
 	});
 

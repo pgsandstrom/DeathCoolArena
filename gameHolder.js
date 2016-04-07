@@ -74,7 +74,6 @@ GameHolder.prototype.sendGame = function (game) {
 var gameHolder;
 
 var addPlayer = function (io, playerId) {
-	console.log("add Player: "+playerId);
 	if (gameHolder === undefined) {
 		gameHolder = new GameHolder(io);
 		gameHolder.addPlayer(playerId);
@@ -85,7 +84,6 @@ var addPlayer = function (io, playerId) {
 };
 
 var removePlayer = function (playerId) {
-	console.log("add removePlayer: "+playerId);
 	gameHolder.removePlayer(playerId);
 	if (gameHolder.running === false) {
 		// TODO: Lite fult

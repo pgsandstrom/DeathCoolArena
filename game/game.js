@@ -14,10 +14,13 @@ Game.prototype.updateMove = function (playerId, move) {
 
 	var player = this.getPlayer(playerId);
 	var attack = player.attacks[move];
-	attack.load = attack.loadTotal;
+	if (attack.load === 0 && attack.refresh === 0) {
+		console.log("doing move");
+		attack.load = attack.loadTotal;
 
-	this.resolveNextUpdate();
-	this.sendGame();
+		this.resolveNextUpdate();
+		this.sendGame();
+	}
 };
 
 Game.prototype.resolveNextUpdate = function () {
@@ -40,7 +43,6 @@ Game.prototype.resolveNextUpdate = function () {
 	} else {
 		this.time = Date.now();
 		var self = this;
-		console.log("sleeping for " + time);
 		setTimeout(function () {
 			//TODO: Blir  det något problem av att vi låter såna här waits ligga kvar, så många kan vara igång samtidigt?
 			//TODO: Om inte annat så blir det fler å fler... så vi borde ha en flagga för att någon redan är igång eller nått...
@@ -153,7 +155,7 @@ ploxfight.Attack = function Attack(player, description, effect) {
 var Attack = ploxfight.Attack;
 
 Attack.prototype.trigger = function () {
-	var opponent= this.getOpponent();
+	var opponent = this.getOpponent();
 	this.effect(this.player, opponent);
 };
 
